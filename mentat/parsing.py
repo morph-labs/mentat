@@ -188,7 +188,7 @@ async def stream_and_parse_llm_response(
 ) -> None:
     response = await call_llm_api(messages, model)
 
-    print("\nstreaming...  use control-c to interrupt the model at any point\n")
+    # print("\nstreaming...  use control-c to interrupt the model at any point\n")
 
     printer = StreamingPrinter()
     printer_task = asyncio.create_task(printer.print_lines())

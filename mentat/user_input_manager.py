@@ -12,6 +12,8 @@ from termcolor import cprint
 
 from .config_manager import ConfigManager, mentat_dir_path
 
+logger = logging.getLogger(__name__)
+
 
 class FilteredFileHistory(FileHistory):
     def __init__(self, filename: str, config: ConfigManager):
@@ -78,7 +80,9 @@ class UserInputManager:
         )
 
     def collect_user_input(self) -> str:
+        logger.info("collecting input")
         user_input = self.session.prompt().strip()
+        logger.info(f"{user_input=}")
         logging.debug(f"User input:\n{user_input}")
         if user_input.lower() == "q":
             raise UserQuitInterrupt()

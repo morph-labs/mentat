@@ -56,7 +56,7 @@ def expand_paths(paths: Iterable[str]) -> Iterable[str]:
             "light_yellow",
         )
         print("\n".join(invalid_paths))
-        exit()
+        # exit()
     return globbed_paths
 
 
@@ -81,15 +81,21 @@ def run(paths: Iterable[str], exclude_paths: Optional[Iterable[str]] = None):
     finally:
         cost_tracker.display_total_cost()
 
-
 def loop(
     paths: Iterable[str],
     exclude_paths: Optional[Iterable[str]],
     cost_tracker: CostTracker,
 ) -> None:
+    logger = logging.getLogger(__name__)
+    
+    logger.info("in loop!")
+    
     git_root = get_shared_git_root_for_paths(paths)
+    logger.info(f"{git_root=}")
     config = ConfigManager(git_root)
+    logger.info(f"{config=}")
     user_input_manager = UserInputManager(config)
+    logger.info(f"{user_input_manager=}")    
     code_file_manager = CodeFileManager(
         paths,
         exclude_paths if exclude_paths is not None else [],
@@ -97,14 +103,21 @@ def loop(
         config,
         git_root,
     )
+    logger.info(f"{code_file_manager=}")
     conv = Conversation(config, cost_tracker, code_file_manager)
+    logger.info(f"{conv=}")
 
     cprint("Type 'q' or use Ctrl-C to quit at any time.\n", color="cyan")
     cprint("What can I do for you?", color="light_blue")
+
     need_user_request = True
+
+    logger.info("entering main loop")
     while True:
         if need_user_request:
+            logger.info("getting response")
             user_response = user_input_manager.collect_user_input()
+            logger.info("got response")
             conv.add_user_message(user_response)
         explanation, code_changes = conv.get_model_response(config)
 

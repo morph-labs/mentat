@@ -105,23 +105,29 @@ class CodeFileManager:
         config: ConfigManager,
         git_root: str,
     ):
+        logger = logging.getLogger("CodeFileManager")
+        logger.info("creating")
         self.config = config
         self.git_root = git_root
         self._set_file_paths(paths, exclude_paths)
+        logger.info("set file paths")        
         self.user_input_manager = user_input_manager
 
         if self.file_paths:
             cprint("Files included in context:", "green")
         else:
+            logger.info("printing")
             cprint("No files included in context.\n", "red")
+            logger.info("printed")            
             cprint("Git project: ", "green", end="")
+            logger.info("printed")
         cprint(os.path.split(self.git_root)[1], "blue")
         _print_path_tree(
             _build_path_tree(self.file_paths, self.git_root),
             get_paths_with_git_diffs(self.git_root),
             self.git_root,
         )
-        print()
+        # print()
 
     def _set_file_paths(
         self, paths: Iterable[str], exclude_paths: Iterable[str]
