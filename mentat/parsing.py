@@ -4,7 +4,7 @@ import logging
 from enum import Enum
 from json import JSONDecodeError
 from timeit import default_timer
-from typing import Generator
+from typing import Generator, Optional
 
 import attr
 import openai
@@ -235,7 +235,7 @@ async def _process_response(
 
 
 def _process_content_line(
-    state, content, printer: StreamingPrinter, code_file_manager: CodeFileManager
+    state: ParsingState, content, printer: StreamingPrinter, code_file_manager: CodeFileManager
 ):
     beginning = state.cur_line == ""
     state.cur_line += content
@@ -279,7 +279,7 @@ def _process_content_line(
                     or state.explained_since_change
                 ):
                     printer.add_string(get_file_name(cur_change))
-                    printer.add_string(change_delimiter)
+                printer.add_string(change_delimiter)
                 state.explained_since_change = False
                 printer.add_string(get_previous_lines(cur_change))
                 printer.add_string(get_removed_block(cur_change))
